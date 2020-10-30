@@ -1,0 +1,172 @@
+basePath: /
+definitions:
+  pokedex.ErrDuplicated:
+    properties:
+      Message:
+        example: item already exist
+        type: string
+    type: object
+  pokedex.ErrNotFound:
+    properties:
+      Message:
+        example: item is not found
+        type: string
+    type: object
+  pokedex.Pokemon:
+    properties:
+      id:
+        example: id-pokemon-string
+        type: string
+      name:
+        example: pikachu
+        type: string
+      number:
+        example: "001"
+        type: string
+      types:
+        example:
+        - water
+        - ' ice'
+        items:
+          type: string
+        type: array
+    required:
+    - name
+    - number
+    - types
+    type: object
+  pokedex.PokemonFeed:
+    properties:
+      cursor:
+        type: string
+      data:
+        $ref: '#/definitions/pokedex.PokemonList'
+    type: object
+  pokedex.PokemonList:
+    properties:
+      pokemons:
+        items:
+          $ref: '#/definitions/pokedex.Pokemon'
+        type: array
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Echo Swagger Example API
+  version: "1.0"
+paths:
+  /pokemon:
+    get:
+      consumes:
+      - '*/*'
+      description: Fetch pokemon which filter by optional parameter
+      parameters:
+      - description: limit items, default is 20
+        in: query
+        name: limit
+        type: integer
+      - description: cursor is used to pagination
+        in: query
+        name: cursor
+        type: string
+      - description: filter by name of pokemon
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pokedex.PokemonFeed'
+      summary: Fetch pokemon which filter by optional parameter
+      tags:
+      - root
+    post:
+      consumes:
+      - application/json
+      description: Store a new pokemon
+      parameters:
+      - description: create pokemon
+        in: body
+        name: pokemon
+        required: true
+        schema:
+          $ref: '#/definitions/pokedex.Pokemon'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success create a new pokemon
+          schema:
+            $ref: '#/definitions/pokedex.Pokemon'
+        "409":
+          description: Pokemon with current name has been existing
+          schema:
+            $ref: '#/definitions/pokedex.ErrDuplicated'
+      summary: Store a new pokemon
+      tags:
+      - root
+  /pokemon/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete pokemon by id
+      parameters:
+      - description: id-pokemon
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204": {}
+        "404":
+          description: item will be delete is not found
+          schema:
+            $ref: '#/definitions/pokedex.ErrNotFound'
+      summary: Delete pokemon by id
+      tags:
+      - root
+    put:
+      consumes:
+      - application/json
+      description: Update pokemon by id
+      parameters:
+      - description: id-pokemon
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: update pokemon
+        in: body
+        name: pokemon
+        required: true
+        schema:
+          $ref: '#/definitions/pokedex.Pokemon'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pokedex.Pokemon'
+        "404":
+          description: item will be update is not found
+          schema:
+            $ref: '#/definitions/pokedex.ErrNotFound'
+      summary: Update pokemon by id
+      tags:
+      - root
+schemes:
+- http
+swagger: "2.0"
