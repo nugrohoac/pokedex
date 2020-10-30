@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+vendor/
+.env
+pokedexapp
+.idea/
 # Binaries for programs and plugins
 *.exe
 *.exe~
