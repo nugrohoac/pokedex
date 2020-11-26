@@ -17,7 +17,6 @@ import (
 	"github.com/sirupsen/logrus"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
-	"github.com/nugrohoac/pokedex/docs"
 	_ "github.com/nugrohoac/pokedex/docs"
 	delivery "github.com/nugrohoac/pokedex/internal/http"
 	"github.com/nugrohoac/pokedex/internal/middleware"
@@ -77,7 +76,6 @@ func main() {
 	}
 
 	// swagger start
-	docs.SwaggerInfo.Host = os.Getenv("SWAGGER_POKEDEX")
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	// swagger end
 
@@ -87,5 +85,5 @@ func main() {
 
 	delivery.NewPokemonDelivery(e, pokemonService, time.Duration(timeOutInt)*time.Second, *validator.New())
 
-	e.Logger.Fatal(e.Start(":3000"))
+	e.Logger.Fatal(e.Start(":4000"))
 }
